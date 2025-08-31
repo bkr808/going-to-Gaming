@@ -79,6 +79,29 @@
   </style>
 </head>
 <body>
+    <!-- زر الرجوع -->
+<button class="back-btn" onclick="window.location.href='main.html'">←</button>
+
+<style>
+  .back-btn {
+    position: fixed;
+    top: 10px;
+    right: 10px; /* فوق شمال */
+    padding: 10px 15px;
+    background-color: var(--primary-2); /* الأزرق من ألوان الخلفية */
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 18px;
+    color: #fff;
+    transition: background-color 0.3s, transform 0.2s;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+  }
+  .back-btn:hover {
+    background-color: #5ecbff; /* أزرق أفتح */
+    transform: scale(1.1);
+  }
+</style>
   <canvas id="space"></canvas>
   <div class="grid-overlay"></div>
 
@@ -241,6 +264,7 @@
   </script>
 </body>
 </html>
+
 
 
 
