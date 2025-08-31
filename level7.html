@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Guessing Game</title>
+  <style>
+    :root{
+      --bg1:#0f0c29; --bg2:#302b63; --bg3:#24243e;
+      --primary:#39c2ff; --secondary:#7cfff3;
+      --btn-bg:rgba(255,255,255,.10); --btn-hover:rgba(57,194,255,.30);
+      --glass:rgba(255,255,255,.08);
+    }
+    *{box-sizing:border-box; font-family:Arial, sans-serif;}
+    html,body{height:100%; margin:0;}
+    body{
+      overflow:hidden;
+      display:flex; flex-direction:column; justify-content:space-between; align-items:center;
+      background:
+        radial-gradient(1200px 600px at 10% 10%, rgba(57,194,255,.06), transparent 60%),
+        radial-gradient(800px 400px at 80% 30%, rgba(124,255,243,.07), transparent 60%),
+        linear-gradient(135deg, var(--bg1), var(--bg2), var(--bg3));
+      background-size:200% 200%; animation:gradientMove 18s ease-in-out infinite;
+      position:relative;
+    }
+    @keyframes gradientMove{
+      0%{background-position:0% 0%} 50%{background-position:100% 100%} 100%{background-position:0% 0%}
+    }
+    canvas#space{position:fixed; inset:0; width:100%; height:100%; display:block; z-index:0}
+    .grid-overlay{
+      position:fixed; inset:0; z-index:1;
+      background-image:
+        linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px);
+      background-size:40px 40px, 40px 40px; pointer-events:none; mix-blend-mode:soft-light;
+    }
+
+    .ui{position:relative; z-index:2; width:100%; display:flex; flex-direction:column; align-items:center;}
+    .top-bar{
+      width:100%; direction:ltr;
+      display:flex; justify-content:space-between; align-items:center;
+      padding:15px 30px; color:var(--secondary);
+      font-size:1.1rem;
+    }
+    .level-label{opacity:.95;}
+    .coins{display:flex; align-items:center; gap:8px; padding:6px 10px; background:var(--glass);
+      border:1px solid var(--primary); border-radius:10px;}
+    .coin-icon{width:22px; height:22px; border-radius:50%; background:gold; border:2px solid #fff5a3; box-shadow:0 0 8px rgba(255,215,0,.5) inset;}
+
+    #hint-box{margin-top:10px; padding:12px 20px; background:var(--glass); border:1px solid var(--primary);
+      border-radius:10px; color:var(--secondary); font-size:1rem; max-width:80%; text-align:center;}
+    #word-display{margin-top:18px; font-size:2.6rem; letter-spacing:12px; color:var(--secondary);
+      text-align:center; font-weight:bold; min-height:3.2rem;}
+
+    .keyboard{display:grid; grid-template-columns:repeat(4, 70px); grid-template-rows:repeat(3, 70px);
+      gap:15px; margin:40px 0 50px 0;}
+    .key{
+      background:var(--btn-bg); border:2px solid var(--primary); border-radius:12px; color:var(--secondary);
+      font-size:1.3rem; display:flex; justify-content:center; align-items:center; cursor:pointer;
+      transition:.2s; user-select:none; backdrop-filter:blur(2px);
+    }
+    .key:hover{background:var(--btn-hover); transform:scale(1.05)}
+    .key:active{transform:scale(.95)}
+    .disabled{opacity:.5; pointer-events:none}
+
+    .modal{
+      position:fixed; inset:0; display:none; align-items:center; justify-content:center; z-index:3;
+      background:rgba(0,0,0,.25);
+    }
+    .modal .box{
+      background:var(--glass); border:1px solid var(--primary); border-radius:14px; padding:16px 20px;
+      color:var(--secondary); font-size:1.1rem; text-align:center; min-width:240px;
+      box-shadow:0 10px 25px rgba(0,0,0,.35);
+    }
+    @media (max-width:420px){
+      .keyboard{grid-template-columns:repeat(4, 58px); grid-template-rows:repeat(3, 58px); gap:12px}
+      #word-display{font-size:2.2rem; letter-spacing:10px}
+    }
+  </style>
+</head>
+<body>
+  <canvas id="space"></canvas>
+  <div class="grid-overlay"></div>
+
+  <div class="ui">
+    <div class="top-bar">
+      <div class="level-label">Level 7</div>
+      <div class="coins">
+        <div class="coin-icon"></div>
+        <span id="coins">0</span>
+      </div>
+    </div>
+    <div id="hint-box">Hint will appear here</div>
+    <div id="word-display"></div>
+    <div class="keyboard" id="keyboard"></div>
+  </div>
+
+  <div class="modal" id="modal">
+    <div class="box" id="modal-text"></div>
+  </div>
+
+  <script>
+    /* ===== Background particles ===== */
+    const canvas = document.getElementById('space');
+    const ctx = canvas.getContext('2d');
+    let w,h,dpr;
+    function resize(){
+      w = canvas.width = window.innerWidth * (window.devicePixelRatio||1);
+      h = canvas.height = window.innerHeight * (window.devicePixelRatio||1);
+      dpr = window.devicePixelRatio||1;
+    }
+    window.addEventListener('resize', resize); resize();
+    const circles = Array.from({length:25},()=>({x:Math.random()*w, y:Math.random()*h, r:10+Math.random()*20, vy:0.2+Math.random()*0.5}));
+    function animate(){
+      ctx.clearRect(0,0,w,h);
+      ctx.fillStyle='rgba(124,255,243,0.2)';
+      circles.forEach(c=>{ctx.beginPath(); ctx.arc(c.x,c.y,c.r,0,Math.PI*2); ctx.fill();
+        c.y -= c.vy; if(c.y + c.r < 0){c.y = h+c.r; c.x=Math.random()*w;}});
+      requestAnimationFrame(animate);
+    } animate();
+
+    /* ===== Game ===== */
+    const data = [
+      {word:"APPLE",hint:"A common fruit"},
+      {word:"ORANGE",hint:"A citrus fruit"},
+      {word:"BANANA",hint:"Long yellow fruit"},
+      {word:"KIWI",hint:"Brown outside, green inside"},
+      {word:"MANGO",hint:"Tropical sweet fruit"},
+      {word:"PIZZA",hint:"Cheesy slice"},
+      {word:"ROBOT",hint:"Programmable machine"},
+      {word:"MARS",hint:"Red planet"},
+      {word:"EAGLE",hint:"Large bird of prey"},
+      {word:"LION",hint:"King of beasts"}
+      // ... باقي الكلمات اللي عندك
+    ];
+
+    const hintEl = document.getElementById("hint-box");
+    const display = document.getElementById("word-display");
+    const keyboard = document.getElementById("keyboard");
+    const coinsEl = document.getElementById("coins");
+    const modal = document.getElementById("modal");
+    const modalText = document.getElementById("modal-text");
+
+    let targetWord = "";
+    let currentGuess = [];
+    let coins = 0;
+    let wrongStreak = 0;
+    let correctStreak = 0; // ✅ تتبع عدد الصح على التوالي
+    let letterSet = [];
+
+    function showModal(msg){
+      modalText.textContent = msg;
+      modal.style.display = "flex";
+      setTimeout(()=>{ modal.style.display = "none"; }, 1800);
+    }
+
+    function updateCoins(delta){
+      coins = Math.max(0, coins + delta);
+      coinsEl.textContent = coins;
+    }
+
+    function updateDisplay(){
+      const chars = targetWord.split("");
+      display.textContent = chars.map((_,i)=> currentGuess[i] ? currentGuess[i] : "_").join(" ");
+    }
+
+    function pickRandomWord(){
+      const item = data[Math.floor(Math.random()*data.length)];
+      targetWord = item.word.toUpperCase();
+      hintEl.textContent = item.hint;
+      currentGuess = [];
+      wrongStreak = 0;
+      buildLetters();
+      renderKeyboard();
+      updateDisplay();
+    }
+
+    function buildLetters(){
+      const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+      const uniq = Array.from(new Set(targetWord.split("")));
+      letterSet = [...uniq];
+      while(letterSet.length < 11){
+        const r = alphabet[Math.floor(Math.random()*alphabet.length)];
+        if(!letterSet.includes(r)) letterSet.push(r);
+      }
+      for(let i = letterSet.length - 1; i > 0; i--){
+        const j = Math.floor(Math.random() * (i + 1));
+        [letterSet[i], letterSet[j]] = [letterSet[j], letterSet[i]];
+      }
+    }
+
+    function renderKeyboard(){
+      keyboard.innerHTML = "";
+      let idx = 0;
+      for(let i=0;i<12;i++){
+        const btn = document.createElement("div");
+        btn.className = "key";
+        if(i === 3){
+          btn.textContent = "⌫";
+          btn.onclick = ()=>{currentGuess.pop(); updateDisplay();};
+        }else{
+          const letter = letterSet[idx++];
+          btn.textContent = letter;
+          btn.onclick = ()=>{
+            if(currentGuess.length < targetWord.length){
+              currentGuess.push(letter);
+              updateDisplay();
+              if(currentGuess.length === targetWord.length){
+                const guess = currentGuess.join("");
+                if(guess === targetWord){
+                  showModal("يا تخمين صح – True Guess");
+                  updateCoins(10);
+                  correctStreak++; // ✅ زود عدد الصح المتتالية
+                  wrongStreak = 0;
+                  if(correctStreak === 10){ // ✅ مكافأة 1000
+                    updateCoins(1000);
+                    showModal("🎉 Bonus +1000 Coins!");
+                    correctStreak = 0; // تصفير بعد البونص
+                  }
+                  pickRandomWord();
+                }else{
+                  showModal("تخمين خطأ – Wrong Guess");
+                  wrongStreak++;
+                  correctStreak = 0; // ❌ لو غلط، تصفير الصح المتتالية
+                  if(wrongStreak >= 3){
+                    updateCoins(-2);
+                    wrongStreak = 0;
+                  }
+                  currentGuess = [];
+                  updateDisplay();
+                }
+              }
+            }
+          };
+        }
+        keyboard.appendChild(btn);
+      }
+    }
+
+    pickRandomWord();
+  </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
