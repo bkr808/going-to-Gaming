@@ -3,9 +3,6 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <script async 
-    src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5814253816484006"
-    crossorigin="anonymous"></script>
   <title>watch and enjoy</title>
   <style>
     :root{
@@ -82,11 +79,6 @@
       transition: background-color 0.3s;
     }
     .gift-box:hover {background-color: #ff9b00;}
-    .ad-container {
-      display: none;
-      margin: 20px auto;
-      text-align: center;
-    }
   </style>
 </head>
 <body>
@@ -95,89 +87,44 @@
 
   <!-- مربعات المستوى -->
   <div class="grid-container">
-    <!-- كل زرار ليه إعلان مستقل -->
-    <div class="grid-box" onclick="showAd(1)">
+    <div class="grid-box" onclick="window.location.href='level1.html'">
       <div class="level-num">1</div><div class="level-text">LEVEL</div>
     </div>
-    <div class="grid-box" onclick="showAd(2)">
+    <div class="grid-box" onclick="window.location.href='level2.html'">
       <div class="level-num">2</div><div class="level-text">LEVEL</div>
     </div>
-    <div class="grid-box" onclick="showAd(3)">
+    <div class="grid-box" onclick="window.location.href='level3.html'">
       <div class="level-num">3</div><div class="level-text">LEVEL</div>
     </div>
-    <div class="grid-box" onclick="showAd(4)">
+    <div class="grid-box" onclick="window.location.href='level4.html'">
       <div class="level-num">4</div><div class="level-text">LEVEL</div>
     </div>
-    <div class="grid-box" onclick="showAd(5)">
+    <div class="grid-box" onclick="window.location.href='level5.html'">
       <div class="level-num">5</div><div class="level-text">LEVEL</div>
     </div>
-    <div class="grid-box" onclick="showAd(6)">
+    <div class="grid-box" onclick="window.location.href='level6.html'">
       <div class="level-num">6</div><div class="level-text">LEVEL</div>
     </div>
-    <div class="grid-box" onclick="showAd(7)">
+    <div class="grid-box" onclick="window.location.href='level7.html'">
       <div class="level-num">7</div><div class="level-text">LEVEL</div>
     </div>
-    <div class="grid-box" onclick="showAd(8)">
+    <div class="grid-box" onclick="window.location.href='level8.html'">
       <div class="level-num">8</div><div class="level-text">LEVEL</div>
     </div>
-    <div class="grid-box" onclick="showAd(9)">
+    <div class="grid-box" onclick="window.location.href='level9.html'">
       <div class="level-num">9</div><div class="level-text">LEVEL</div>
     </div>
-    <div class="grid-box" onclick="showAd(10)">
+    <div class="grid-box" onclick="window.location.href='level10.html'">
       <div class="level-num">10</div><div class="level-text">LEVEL</div>
     </div>
   </div>
 
-  <!-- أماكن الإعلانات -->
-  <div id="ads-area">
-    <div id="ad1" class="ad-container">
-      <ins class="adsbygoogle"
-          style="display:block"
-          data-ad-client="ca-pub-5814253816484006"
-          data-ad-slot="1111111111"
-          data-ad-format="auto"></ins>
-    </div>
-    <div id="ad2" class="ad-container">
-      <ins class="adsbygoogle"
-          style="display:block"
-          data-ad-client="ca-pub-5814253816484006"
-          data-ad-slot="2222222222"
-          data-ad-format="auto"></ins>
-    </div>
-    <div id="ad3" class="ad-container">
-      <ins class="adsbygoogle"
-          style="display:block"
-          data-ad-client="ca-pub-5814253816484006"
-          data-ad-slot="3333333333"
-          data-ad-format="auto"></ins>
-    </div>
-    <!-- كرر نفس الشكل لحد ad10 -->
-  </div>
-
-  <!-- رابط سياسة الإعلان -->
-  <div style="position: fixed; bottom: 0; left: 0; right: 0; text-align: center; padding: 10px;">
-    <a href="play.html" style="color: black; text-decoration: none; font-size: 16px;">
-      سياسة الإعلان
-    </a>
-  </div>
-
   <!-- زر الهدايا -->
   <button class="gift-box" onclick="alert('هدية لك!')">🎁</button>
-
-  <script>
-    function showAd(num){
-      // اخفاء الكل
-      document.querySelectorAll('.ad-container').forEach(el => el.style.display = 'none');
-      // اظهار الإعلان المطلوب
-      let ad = document.getElementById('ad'+num);
-      if(ad){
-        ad.style.display = 'block';
-        (adsbygoogle = window.adsbygoogle || []).push({});
-      }
-    }
-  </script>
 </body>
 </html>
+
+
 
 
 
