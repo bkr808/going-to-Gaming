@@ -3,179 +3,183 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>مستويات اللعبة</title>
-
-  <!-- كود تهيئة AdSense -->
   <script async 
     src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5814253816484006"
     crossorigin="anonymous"></script>
-
+  <title>watch and enjoy</title>
   <style>
+    :root{
+      --bg1: #0f0c29;
+      --bg2: #302b63;
+      --bg3: #24243e;
+      --primary: #7cfff3;
+      --primary-2: #39c2ff;
+    }
+    * {box-sizing: border-box;}
+    html, body {height: 100%; margin: 0;}
     body {
-      margin: 0;
-      font-family: "Cairo", Arial, sans-serif;
-      background: radial-gradient(circle at 20% 20%, #0d1b2a 0%, #0a192f 40%, #020817 100%);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      overflow-x: hidden;
+      background: radial-gradient(1200px 600px at 10% 10%, rgba(57, 194, 255, .06), transparent 60%),
+                  radial-gradient(800px 400px at 80% 30%, rgba(124, 255, 243, .07), transparent 60%),
+                  linear-gradient(135deg, var(--bg1), var(--bg2), var(--bg3));
+      background-size: 200% 200%;
+      animation: gradientMove 18s ease-in-out infinite;
+    }
+    @keyframes gradientMove {
+      0% {background-position: 0% 0%;}
+      50% {background-position: 100% 100%;}
+      100% {background-position: 0% 0%;}
+    }
+    .back-btn {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      padding: 10px 15px;
+      background-color: rgba(255, 255, 255, 0.2);
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 18px;
       color: #fff;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
+      transition: background-color 0.3s;
     }
-
-    /* البانر */
-    .ad-banner {
-      text-align: center;
-      margin: 10px auto;
-    }
-
-    /* المحتوى الرئيسي */
-    main {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 20px;
-    }
-
-    .levels {
+    .back-btn:hover {background-color: rgba(255, 255, 255, 0.5);}
+    .grid-container {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
-      gap: 15px;
-      margin-bottom: 20px;
-    }
-
-    .level-btn {
-      background: #1b263b;
-      border: 2px solid #415a77;
-      color: #fff;
-      border-radius: 12px;
-      padding: 20px;
-      text-align: center;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-
-    .level-btn:hover {
-      background: #415a77;
-    }
-
-    .gift-btn {
-      padding: 15px 25px;
-      font-size: 20px;
-      border: none;
-      border-radius: 12px;
-      background: #ffbc00;
-      color: white;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-    .gift-btn:hover { background: #ff9b00; }
-
-    /* البوب اب */
-    .popup {
-      display: none;
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.7);
-      align-items: center;
+      gap: 20px;
       justify-content: center;
-      z-index: 1000;
+      margin-top: 150px;
     }
-    .popup-content {
-      background: white;
+    .grid-box {
+      background: rgba(255, 255, 255, 0.2);
       padding: 20px;
-      border-radius: 12px;
-      max-width: 600px;
       text-align: center;
-    }
-    .close-btn {
-      margin-top: 15px;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 8px;
-      background: #1b263b;
-      color: white;
+      border-radius: 10px;
+      border: 2px solid var(--primary-2);
+      color: #fff;
       cursor: pointer;
+      transition: transform 0.3s, background-color 0.3s;
+    }
+    .grid-box:hover {
+      transform: scale(1.1);
+      background-color: rgba(124, 255, 243, 0.3);
+    }
+    .level-num {font-size: 40px; font-weight: bold; margin-bottom: 10px;}
+    .level-text {font-size: 20px; font-weight: bold; margin-top: 10px;}
+    .gift-box {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      padding: 20px;
+      background-color: #ffbc00;
+      border: none;
+      border-radius: 50%;
+      color: white;
+      font-size: 22px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    .gift-box:hover {background-color: #ff9b00;}
+    .ad-container {
+      display: none;
+      margin: 20px auto;
+      text-align: center;
     }
   </style>
 </head>
 <body>
+  <!-- زر الرجوع -->
+  <button class="back-btn" onclick="window.location.href='index.html'">←</button>
 
-  <!-- إعلان بانر أعلى الصفحة -->
-  <div class="ad-banner">
-    <ins class="adsbygoogle"
-         style="display:block"
-         data-ad-client="ca-pub-5814253816484006"
-         data-ad-slot="1111111111"
-         data-ad-format="auto"
-         data-full-width-responsive="true"></ins>
-    <script>
-      (adsbygoogle = window.adsbygoogle || []).push({});
-    </script>
-  </div>
-
-  <main>
-    <!-- أزرار المستويات -->
-    <div class="levels">
-      <div class="level-btn" onclick="openAd()">المستوى 1</div>
-      <div class="level-btn" onclick="openAd()">المستوى 2</div>
-      <div class="level-btn" onclick="openAd()">المستوى 3</div>
-      <div class="level-btn" onclick="openAd()">المستوى 4</div>
-      <div class="level-btn" onclick="openAd()">المستوى 5</div>
-      <div class="level-btn" onclick="openAd()">المستوى 6</div>
-      <div class="level-btn" onclick="openAd()">المستوى 7</div>
-      <div class="level-btn" onclick="openAd()">المستوى 8</div>
-      <div class="level-btn" onclick="openAd()">المستوى 9</div>
-      <div class="level-btn" onclick="openAd()">المستوى 10</div>
+  <!-- مربعات المستوى -->
+  <div class="grid-container">
+    <!-- كل زرار ليه إعلان مستقل -->
+    <div class="grid-box" onclick="showAd(1)">
+      <div class="level-num">1</div><div class="level-text">LEVEL</div>
     </div>
-
-    <!-- زرار الهدية -->
-    <button class="gift-btn" onclick="openAd()">🎁 افتح هديتك</button>
-  </main>
-
-  <!-- إعلان بانر أسفل الصفحة -->
-  <div class="ad-banner">
-    <ins class="adsbygoogle"
-         style="display:block"
-         data-ad-client="ca-pub-5814253816484006"
-         data-ad-slot="2222222222"
-         data-ad-format="auto"
-         data-full-width-responsive="true"></ins>
-    <script>
-      (adsbygoogle = window.adsbygoogle || []).push({});
-    </script>
+    <div class="grid-box" onclick="showAd(2)">
+      <div class="level-num">2</div><div class="level-text">LEVEL</div>
+    </div>
+    <div class="grid-box" onclick="showAd(3)">
+      <div class="level-num">3</div><div class="level-text">LEVEL</div>
+    </div>
+    <div class="grid-box" onclick="showAd(4)">
+      <div class="level-num">4</div><div class="level-text">LEVEL</div>
+    </div>
+    <div class="grid-box" onclick="showAd(5)">
+      <div class="level-num">5</div><div class="level-text">LEVEL</div>
+    </div>
+    <div class="grid-box" onclick="showAd(6)">
+      <div class="level-num">6</div><div class="level-text">LEVEL</div>
+    </div>
+    <div class="grid-box" onclick="showAd(7)">
+      <div class="level-num">7</div><div class="level-text">LEVEL</div>
+    </div>
+    <div class="grid-box" onclick="showAd(8)">
+      <div class="level-num">8</div><div class="level-text">LEVEL</div>
+    </div>
+    <div class="grid-box" onclick="showAd(9)">
+      <div class="level-num">9</div><div class="level-text">LEVEL</div>
+    </div>
+    <div class="grid-box" onclick="showAd(10)">
+      <div class="level-num">10</div><div class="level-text">LEVEL</div>
+    </div>
   </div>
 
-  <!-- بوب اب إعلان -->
-  <div class="popup" id="adPopup">
-    <div class="popup-content">
-      <p>شاهد الإعلان 🎬</p>
+  <!-- أماكن الإعلانات -->
+  <div id="ads-area">
+    <div id="ad1" class="ad-container">
       <ins class="adsbygoogle"
-           style="display:block"
-           data-ad-client="ca-pub-5814253816484006"
-           data-ad-slot="3333333333"
-           data-ad-format="auto"
-           data-full-width-responsive="true"></ins>
-      <script>
-        (adsbygoogle = window.adsbygoogle || []).push({});
-      </script>
-      <button class="close-btn" onclick="closeAd()">✔ إغلاق</button>
+          style="display:block"
+          data-ad-client="ca-pub-5814253816484006"
+          data-ad-slot="1111111111"
+          data-ad-format="auto"></ins>
     </div>
+    <div id="ad2" class="ad-container">
+      <ins class="adsbygoogle"
+          style="display:block"
+          data-ad-client="ca-pub-5814253816484006"
+          data-ad-slot="2222222222"
+          data-ad-format="auto"></ins>
+    </div>
+    <div id="ad3" class="ad-container">
+      <ins class="adsbygoogle"
+          style="display:block"
+          data-ad-client="ca-pub-5814253816484006"
+          data-ad-slot="3333333333"
+          data-ad-format="auto"></ins>
+    </div>
+    <!-- كرر نفس الشكل لحد ad10 -->
   </div>
+
+  <!-- رابط سياسة الإعلان -->
+  <div style="position: fixed; bottom: 0; left: 0; right: 0; text-align: center; padding: 10px;">
+    <a href="play.html" style="color: black; text-decoration: none; font-size: 16px;">
+      سياسة الإعلان
+    </a>
+  </div>
+
+  <!-- زر الهدايا -->
+  <button class="gift-box" onclick="alert('هدية لك!')">🎁</button>
 
   <script>
-    function openAd() {
-      document.getElementById("adPopup").style.display = "flex";
-      (adsbygoogle = window.adsbygoogle || []).push({});
-    }
-    function closeAd() {
-      document.getElementById("adPopup").style.display = "none";
-      alert("🎉 مبروك! حصلت على هديتك / فتحت المستوى");
+    function showAd(num){
+      // اخفاء الكل
+      document.querySelectorAll('.ad-container').forEach(el => el.style.display = 'none');
+      // اظهار الإعلان المطلوب
+      let ad = document.getElementById('ad'+num);
+      if(ad){
+        ad.style.display = 'block';
+        (adsbygoogle = window.adsbygoogle || []).push({});
+      }
     }
   </script>
 </body>
 </html>
+
+
 
 
 
